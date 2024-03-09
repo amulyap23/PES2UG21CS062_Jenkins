@@ -11,7 +11,6 @@ pipeline {
             }
         }
 
-
         stage('Test') {
             steps {
                script{
@@ -24,15 +23,14 @@ pipeline {
             steps {
                 script {
                     echo 'deploy'
+                }
             }
         }
     }
-}
 
     post {
         failure {
             error 'Pipeline failed!'
         }
-
     }
 }
