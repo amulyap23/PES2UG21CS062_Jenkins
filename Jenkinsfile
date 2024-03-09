@@ -1,40 +1,67 @@
 pipeline {
     agent any
 
-    stages {
-           stage('Clone Repository') {
-               steps {
-                   checkout([$class:'GitSCM',
-                   branches: [[name: '*/main']],
-                   userRemoteConfigs: [[url: "https://github.com/amulyap23/PES2UG21CS062_Jenkins.git']]])
-               }
-            }
+    environment {
+        // Define environment variables
+        SRN = 'PES2UG21CS062'
+        // Additional code for readability, to be used in further stages
+    }
 
+    stages {
         stage('Build') {
             steps {
-                build 'PES2UG21CS062-1'
-                sh 'g++ main.cpp -o output"
+                script {
+                    // Build stage: Compile the .cpp file
+                    echo 'Building.....!!'
+                    // wud get Notified by our hero -> webHook for changes in the rep and look for any updates
+                    sh "g++ -o ${SRN}_executable ${SRN}_1.cpp"
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh './output'
+                script {
+                    // Test stage: Print output of compiled .cpp file
+                    echo 'Testing.....!!'
+                    sh "./${SRN}_executable"
+                }
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
-                    echo 'deploy'
+                    // Deploy stage: Deployment steps
+                    echo 'Deploying....!!'
+                    sh 'exit 1'
+                     //here insert below lines(red ones') to make the code with err
+                }
             }
         }
     }
 
     post {
-        failure {
-            error 'Pipeline failed!'
+        // Post-build actions
+        success {
+            echo 'Pipeline succeeded!'
+            // Additional actions for success (if any)
         }
 
+        failure {
+            echo 'Pipeline failed!'
+            // Additional actions for failure (if any)
+        }
+
+        // Declarative Post Actions with timeout and retry
+        always {
+            timeout(time: 1, unit: 'HOURS') {
+                echo 'This will always execute with a timeout of 1 hour.'
+            }
+
+            retry(3) {
+                echo 'This will be retried up to 3 times.'
+            }
+        }
     }
 }
