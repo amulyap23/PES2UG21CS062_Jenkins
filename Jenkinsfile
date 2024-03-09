@@ -34,7 +34,6 @@ pipeline {
                 script {
                     // Deploy stage: Deployment steps
                     echo 'Deploying....!!'
-                    sh 'exit 1'
                      //here insert below lines(red ones') to make the code with err
                 }
             }
